@@ -89,6 +89,7 @@ class Request
             $this->messages($object->messages());
             self::$__object = true;
         }
+
         $check = true;
         if (!empty($this->__rules)) {
             $dataFields = $this->getFields();

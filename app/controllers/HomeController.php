@@ -12,6 +12,15 @@ use Core\View;
 
 class HomeController
 {
+    public function showData()
+    {
+        // $userass = ['sdsdf' => "234asd"];
+        // return View::render("product/index", compact("userass"));
+
+        $user = (new User)->get();
+        return response($user, 200);
+    }
+
     public function index()
     {
         Session::delete();
@@ -82,13 +91,13 @@ class HomeController
         return Response::redirect();
     }
 
-    public function delete($id, $slug)
+    public function delete($id)
     {
-        echo $id  . $slug;
+        echo $id;
     }
-    public function detail($id, $slug)
+    public function detail($id)
     {
-        echo $id  . $slug;
+        echo $id;
     }
 
     public function check_age($age = "")

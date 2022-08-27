@@ -12,7 +12,6 @@ foreach ($conf as $value) {
 
 require_once _DIR_ROOT . "vendor/core/Helpers.php";
 
-
 // autoload app service 
 if (!empty($config['app']['service'])) {
     foreach ($config['app']['service'] as $key => $value) {

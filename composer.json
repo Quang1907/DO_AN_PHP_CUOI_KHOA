@@ -6,7 +6,7 @@
       "Core\\": "vendor/core/"
     },
     "files": [
-      "app/helpers/function.php"
+      "app/helpers/functions.php"
     ]
   },
   "authors": [
@@ -15,5 +15,7 @@
       "email": "ltrinh1907@gmail.com"
     }
   ],
-  "require": {}
+  "require": {
+    "vlucas/phpdotenv": "^5.4"
+  }
 }

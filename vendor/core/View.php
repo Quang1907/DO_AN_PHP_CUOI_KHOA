@@ -8,10 +8,10 @@ class View
     static public function render($name = "", $data = [])
     {
         if (!empty(self::$dataShare)) {
-            $data =  array_merge(self::$dataShare);
+            $data = array_merge($data, self::$dataShare);
         }
         extract($data);
-        $pathView = _DIR_ROOT . "resource/views/$name.php";
+        $pathView = _DIR_ROOT . "resources/views/$name.php";
         $contentView = "";
         if (file_exists($pathView)) {
             $contentView = file_get_contents($pathView);

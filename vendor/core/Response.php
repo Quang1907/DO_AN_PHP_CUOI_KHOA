@@ -16,5 +16,7 @@ class Response
             header("Location: $path");
             die();
         }
+        header("Location: " . _WEB_ROOT);
+        die();
     }
 }

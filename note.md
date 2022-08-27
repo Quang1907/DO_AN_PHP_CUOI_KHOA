@@ -29,3 +29,7 @@
 # view share
 
 # commandline (artisan)
+
+# .env
+
+# tailwind

@@ -31,7 +31,7 @@ class Template
         if (!empty($matches[1])) {
             foreach ($matches[1] as $key => $view) {
                 $contentView = "";
-                $pathView = _DIR_ROOT . "resource/views/$view.php";
+                $pathView = _DIR_ROOT . "resources/views/$view.php";
                 if (file_exists($pathView)) {
                     $contentView = file_get_contents($pathView);
                 } else {
@@ -50,7 +50,7 @@ class Template
         if (!empty($matches[1])) {
             foreach ($matches[1] as $key => $view) {
                 $contentView = "";
-                $pathView = _DIR_ROOT . "resource/views/$view.php";
+                $pathView = _DIR_ROOT . "resources/views/$view.php";
                 if (file_exists($pathView)) {
                     $contentView = file_get_contents($pathView);
                 } else {
@@ -242,5 +242,4 @@ class Template
             $this->__content = str_replace($matches[0], "", $this->__content);
         }
     }
- 
 }
