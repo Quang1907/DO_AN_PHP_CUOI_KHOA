@@ -47,7 +47,7 @@
               "<th>" + e.age + "</th>" +
               "<th>" + e.password + "</th>" +
               "<th>" +
-              "<a href='{{ route('home.detail',2) }}' class='p-3 bg-blue-500 rounded-xl'>Detail</a>" +
+              "<a href='{{ route('home.detail', 2) }}' class='p-3 bg-blue-500 rounded-xl'>Detail</a>" +
               "<a href='' class='p-3 bg-blue-500 mx-1 rounded-xl'>Edit</a>" +
               "<button class='p-3 bg-blue-500 rounded-xl'>Delete</button>" +
               "</th>" +
