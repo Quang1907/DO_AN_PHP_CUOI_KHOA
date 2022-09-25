@@ -6,7 +6,7 @@ use Core\Model;
 
 class User extends Model
 {
-    protected $table = "user";
-    protected $primary = "name";
-    protected $field = "*";
+    public $table = "Users";
+    public $primary = "id";
+    public $field = "*";
 }

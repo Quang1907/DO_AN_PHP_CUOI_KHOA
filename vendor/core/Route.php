@@ -2,22 +2,42 @@
 
 namespace Core;
 
+use ReflectionFunction;
+
 class Route
 {
     static private $route = null;
     static private $path = null;
     static private $routeConfig = [];
     static private $routeWhere = [];
+    static private $middleware = [];
+    static private $middle = [];
     static private $controller = null;
     static private $getPath = null;
     static private $db = null;
+    static private $function =  null;
+    static private $getMethod =  null;
+    static private $group = null;
 
     public function __construct()
     {
         if (self::$db == null) {
             self::$db = new Database();
         }
+
         self::$route = $this;
+
+        self::$function = [
+            "get" => "index|create|edit|show|delete",
+            "post" => "update|store",
+        ];
+        self::$getMethod = ["edit", "show", "delete", "update"];
+    }
+
+    static public function middleware($middleware)
+    {
+        self::$middleware = $middleware;
+        return new static;
     }
 
     public function loadRoute($name = "web")
@@ -41,14 +61,61 @@ class Route
     static public function get($path = "", $callback = [])
     {
         self::$path = $path;
-        self::$routeConfig["get"][$path] = $callback;
+        if (!empty(self::$group)) {
+            self::$path = self::$group . "/" . $path;
+            self::$middle[self::$path] = self::$middleware;
+        }
+        self::$routeConfig["get"][self::$path] = $callback;
         return self::$route;
+    }
+
+    static public function resource($path = "", $callback)
+    {
+        self::$path = $path;
+        if (!empty(self::$group)) {
+            self::$path = self::$group . "/" . $path;
+            self::$middle[self::$path] = self::$middleware;
+        }
+
+        if (empty($path)) {
+            self::$path = self::$group;
+        }
+
+        $function = self::$function;
+        $getMethod = self::$getMethod;
+
+        foreach ($function as $method => $valueItem) {
+            $valueArr = explode("|", $valueItem);
+            foreach ($valueArr as $value) {
+                if ($value == "index") {
+                    self::$routeConfig[$method][self::$path] = [$callback, $value];
+                }
+                if (in_array($value, $getMethod)) {
+                    self::$routeConfig[$method][self::$path . "/$value/{id}"] = [$callback, $value];
+                } else {
+                    self::$routeConfig[$method][self::$path . "/$value"] = [$callback, $value];
+                }
+            }
+        }
+        return new static;
+    }
+
+    static public function group($group = "", $callback)
+    {
+        self::$group = $group;
+        call_user_func($callback, []);
+        return new static;
     }
 
     static public function post($path = "", $callback = [])
     {
         self::$path = $path;
-        self::$routeConfig["post"][$path] = $callback;
+        if (!empty(self::$group)) {
+            self::$path = self::$group . "/" . $path;
+            self::$middle[self::$path] = self::$middleware;
+        }
+
+        self::$routeConfig["post"][self::$path] = $callback;
         return self::$route;
     }
 
@@ -70,7 +137,17 @@ class Route
 
         self::handleRouteMiddleware();
         self::handleGlobalMiddleware();
-        self::handleAppService();
+
+        if (is_object($callback)) {
+            if ($this->isClosures($callback)) {
+                self::handleAppService();
+            }
+        }
+
+        if (is_array($callback)) {
+            if (!$this->checkAPI($callback[0]))
+                self::handleAppService();
+        }
 
         if ($checkPath) {
             //neu la object => thuc thi
@@ -80,14 +157,29 @@ class Route
                 // neu la array => goi den controller va action tuong ung
                 // khoi tao controller
                 $controller = new $callback[0]();
-                self::$controller = $controller;
                 // sua lai cau hinh
+                self::$controller = $controller;
                 $callback = [$controller, $callback[1]];
                 return call_user_func_array($callback, $params);
             }
         }
         // neu khong ton tai thi load loi
         Error::render(["error" => "khong tim thay route tuong ung"]);
+    }
+
+    // check API 
+    public function checkAPI($routeAPI = "")
+    {
+        $apiArr = explode("\\", $routeAPI);
+        if (count($apiArr) > 1 && in_array("Api", $apiArr) && in_array("Controllers", $apiArr)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isClosures($object)
+    {
+        return (new ReflectionFunction($object))->isClosure();
     }
 
     /**
@@ -122,6 +214,19 @@ class Route
                 }
             }
         }
+
+        if (!empty(self::$middle)) {
+            foreach (self::$middle as $key => $value) {
+                if (self::$getPath == trim($key, "/")) {
+                    $path = _DIR_ROOT . "app/middlewares/$value.php";
+                    if (file_exists($path)) {
+                        require_once $path;
+                        (new $value)->handle();
+                    }
+                }
+            }
+        }
+
         return $check;
     }
 
@@ -149,6 +254,7 @@ class Route
             foreach ($config['app']['routeMiddleware'] as $key => $middlewareItem) {
                 $path = _DIR_ROOT . "app/middlewares/$middlewareItem.php";
                 if ($url == $key && file_exists($path)) {
+                    // if (stristr($url, $key) && file_exists($path)) {
                     require_once $path;
                     $routeObject = new $middlewareItem();
                     if (!empty(self::$db)) {

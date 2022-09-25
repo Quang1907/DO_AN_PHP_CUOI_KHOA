@@ -11,7 +11,7 @@ class View
             $data = array_merge($data, self::$dataShare);
         }
         extract($data);
-        $pathView = _DIR_ROOT . "resources/views/$name.php";
+        $pathView = _DIR_ROOT . "resources/views/$name.blade.php";
         $contentView = "";
         if (file_exists($pathView)) {
             $contentView = file_get_contents($pathView);

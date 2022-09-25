@@ -18,9 +18,6 @@ class Database extends Connection
         foreach ($checkField as $key => $value) {
             $fieldArr["field"][$key] = $value["Field"];
         }
-        // echo '<pre>';
-        // var_dump($fieldArr['field']);
-        // echo '</pre>';
 
         if (!empty($data)) {
             $fieldStr = "";
@@ -42,11 +39,20 @@ class Database extends Connection
 
     public function updateData($data, $table,  $condition)
     {
+        $sql = "DESCRIBE $table";
+        $checkField = $this->getRaw($sql);
+        foreach ($checkField as $key => $value) {
+            $fieldArr["field"][$key] = $value["Field"];
+        }
+        
         if (!empty($data)) {
             $updateStr = "";
             foreach ($data as $key => $value) {
-                $updateStr .= " $key = '$value',";
+                if (in_array($key, $fieldArr['field'])) {
+                    $updateStr .= " $key = '$value',";
+                }
             }
+            
             $updateStr = trim($updateStr, ",");
             $sql = "UPDATE $table SET  $updateStr $condition";
             $status = $this->query($sql);
@@ -79,6 +85,7 @@ class Database extends Connection
 
     public function lastId()
     {
+        $this->resetQuery();
         return $this->__conn->lastInsertId();
     }
 

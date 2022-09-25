@@ -19,6 +19,7 @@ class Template
         $this->whileLoop();
         $this->foreachLoop();
         $this->forLoop();
+        Session::delete("callback");
         $this->csrf();
         eval("?>$this->__content<?php");
     }
@@ -88,6 +89,16 @@ class Template
                 $this->__content = str_replace($matches[0][$key], "", $this->__content);
             }
         }
+
+        $pattern = "~@yield\(\s*\"*'*(.+?)\s*\"*'*\)~is";
+        preg_match_all($pattern, $this->__content, $matches);
+
+        if (!empty($matches[1])) {
+            foreach ($matches[1] as $key => $yield) {
+                $this->__content = preg_replace("~@yield\(\"*'*($yield)\"*'*\)~", "", $this->__content);
+            }
+        }
+
         if (strpos($this->__content, "@session")) {
             $this->session();
         }
@@ -143,7 +154,7 @@ class Template
 
     public function ifCondition()
     {
-        $pattern = "~@if\s*\((.+?)\)~is";
+        $pattern = "~@if\s*\((.+?)\s*\)\s*$~im";
         preg_match_all($pattern, $this->__content, $matches);
         if (!empty($matches[1])) {
             foreach ($matches[1] as $key => $value) {

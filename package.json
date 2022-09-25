@@ -3,6 +3,9 @@
     "tailwindcss": "^3.1.8"
   },
   "scripts": {
-    "start": "npx tailwindcss -i ./resources/assets/css/tailwind.css -o ./public/css/style.css --watch"
+    "start": "npx tailwindcss -i ./resources/assets/css/style.css -o ./public/css/style.css --watch"
+  },
+  "dependencies": {
+    "sweetalert2": "^11.4.32"
   }
 }

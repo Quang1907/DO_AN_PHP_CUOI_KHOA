@@ -2,7 +2,7 @@
 return
 '<?php
 
-namespace App\Controllers;
+namespace ' . $namespace . ';
 
 class ' . $controller . '{
     // construct
@@ -41,7 +41,7 @@ class ' . $controller . '{
     }
     
     // destroy
-    public function destroy($id = "") {
+    public function delete($id = "") {
         
     }
 }

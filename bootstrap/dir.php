@@ -1,5 +1,4 @@
 <?php
-$public = "public/";
 
 // config dir root
 $fileProject = str_replace("bootstrap", "", __DIR__);
@@ -11,7 +10,7 @@ if (!empty($_SERVER["HTTPS"]) && !empty($_SERVER['HTTPS'] == "on")) {
 } else {
     $webRoot = "http://";
 }
-$host = $_SERVER["HTTP_HOST"];
-$project = str_replace($_SERVER["DOCUMENT_ROOT"], "", _DIR_ROOT);
-$webRoot .= $host . $project . $public;
+$host = ( !empty( $_ENV['APP_URL'] ) ) ? $_ENV['APP_URL'] : $_SERVER["HTTP_HOST"];
+$webRoot .= $host ."/";
+
 define("_WEB_ROOT", $webRoot);

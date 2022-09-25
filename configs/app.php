@@ -5,7 +5,8 @@ $config["app"] = [
         HtmlHelper::class
     ],
     'routeMiddleware' => [
-        "home/detail/{id}-{slug}" => AuthMiddleware::class
+        "user" => AuthMiddleware::class,
+        "user/create" => AuthMiddleware::class,
     ],
     "globalMiddleware" => [
         ParamsMiddleware::class,

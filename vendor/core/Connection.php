@@ -15,10 +15,10 @@ class Connection
 
     private function __construct()
     {
-        $this->host = $_ENV['DB_HOST'];
-        $this->dbName = $_ENV["DB_DATATBASE"];
-        $this->userName = $_ENV["DB_USERNAME"];
-        $this->password = $_ENV["DB_PASSWORD"];
+        $this->host = env("DB_HOST");
+        $this->dbName = env("DB_DATATBASE");
+        $this->userName = env("DB_USERNAME");
+        $this->password = env("DB_PASSWORD");
         try {
             $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbName;
             $options = [

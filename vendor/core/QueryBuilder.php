@@ -8,7 +8,7 @@ trait QueryBuilder
 
 {
     static public $tableName = "";
-    static public $fieldName = "";
+    static public $fieldName = "*";
     static public $primaryKey = "";
     static public $comperator = "";
     static public $where = "";
@@ -39,7 +39,7 @@ trait QueryBuilder
             $operator = "=";
         }
         if (!empty($operator) && !empty($field)) {
-            self::$where .= self::$comperator . "$field $operator $condition";
+            self::$where .= self::$comperator . "$field $operator '$condition'";
         }
         return new static;
     }
@@ -85,7 +85,7 @@ trait QueryBuilder
     {
         if (!empty($tableJoin) && !empty($relationship)) {
             self::$tableJoin = $tableJoin;
-            self::$join = " INNER JOIN $tableJoin ON $relationship";
+            self::$join .= " INNER JOIN $tableJoin ON $relationship";
             // DESCRIBE user;
         }
         return new static;
@@ -93,7 +93,11 @@ trait QueryBuilder
 
     static public function insert($data = [])
     {
-        self::getTableStatic($table);
+        if (!empty(self::$tableName)) {
+            $table = self::$tableName;
+        } else {
+            self::getTableStatic($table);
+        }
         return self::Db()->insertData($data, $table);
     }
 
@@ -148,10 +152,7 @@ trait QueryBuilder
 
     static private function Db()
     {
-        if (empty(self::$db)) {
-            self::$db = new Database();
-        }
-        return self::$db;
+        return new Database();
     }
 
     public function get()
@@ -161,6 +162,19 @@ trait QueryBuilder
         $this->resetQuery();
         return $result;
     }
+
+    static public function all()
+    {
+        self::getTableStatic($table);
+        $field = self::getFieldStatic();
+        $sql = "SELECT $field FROM $table";
+        return self::Db()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // static public function getColumn()
+    // {
+    //     $sql = "DESCRIBE " . self::$tableName;
+    // }
 
     public function first()
     {
@@ -183,19 +197,25 @@ trait QueryBuilder
         return $this->lastId();
     }
 
-    private function getRaw($sql = "")
+    public function describe()
+    {
+        $sql = "DESCRIBE " . self::$tableName;
+        return $this->getRaw($sql);
+    }
+
+    public function getRaw($sql = "")
     {
         $result = $this->query($sql);
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function firstRaw($sql = "")
+    public function firstRaw($sql = "")
     {
         $result = $this->query($sql);
         return $result->fetch(PDO::FETCH_ASSOC);
     }
 
-    private function countColumn($sql = "")
+    public function countColumn($sql = "")
     {
         $result = $this->query($sql);
         return $result->rowCount();
@@ -235,7 +255,7 @@ trait QueryBuilder
     public function resetQuery()
     {
         self::$tableName = "";
-        self::$fieldName = "";
+        self::$fieldName = "*";
         self::$comperator = "";
         self::$where = "";
         self::$orWhere = "";

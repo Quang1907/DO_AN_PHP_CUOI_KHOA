@@ -89,7 +89,7 @@ class Request
             $this->messages($object->messages());
             self::$__object = true;
         }
-
+        
         $check = true;
         if (!empty($this->__rules)) {
             $dataFields = $this->getFields();
@@ -146,6 +146,12 @@ class Request
                             $check = false;
                         }
                     }
+                    if ($ruleName == "phone") {
+                        if (!preg_match("~^[0-9]{3}-[0-9]{3}-[0-9]{4}$~", $dataFields[$fieldName])) {
+                            $this->setError($fieldName, $ruleName);
+                            $check = false;
+                        }
+                    }
 
                     // callback
                     $pattern = "~^callback_(.+?)$~is";
@@ -182,8 +188,8 @@ class Request
         $sessionKey = Session::isInvalid();
         Session::flash($sessionKey . "_error", $this->errors());
         Session::flash($sessionKey . "_old", $this->getFields());
-        if (!$check) {
-            $callback = Session::flash("callback");
+        $callback = Session::flash("callback");
+        if (!$check && !empty($callback)) {
             return Response::redirect($callback);
         }
         return $check;

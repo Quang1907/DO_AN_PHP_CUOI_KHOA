@@ -1,6 +1,35 @@
 <?php
 if (!empty($_SERVER['argv'][1])) {
     $argv = $_SERVER['argv'][1];
+    if ($argv == "make:request") {
+        if (!empty($_SERVER['argv'][2])) {
+            $requestFile = $requestName = $_SERVER['argv'][2];
+            $requestFileName = "";
+            $requestArr = explode("/", $requestName);
+            if (is_array($requestArr) && count($requestArr) > 1) {
+                $pathRequest = "app/requests";
+                for ($i = 0; $i < count($requestArr) - 1; $i++) {
+                    $pathRequest .= "/$requestArr[$i]";
+                    if (!file_exists($pathRequest)) {
+                        mkdir($pathRequest);
+                    }
+                    $requestArr[$i] = ucfirst($requestArr[$i]);
+                }
+                $requestName = end($requestArr);
+                $requestFile = "\\" . implode("\\", $requestArr);
+                $requestFileName = str_replace("\\$requestName", "", $requestFile);
+            }
+            $path =  "vendor/core/artisan/Request.php";
+            $contentRequest = require_once($path);
+            $requestFile = str_replace("\\", "/", $requestFile);
+            $pathRequest = "app/requests/$requestFile.php";
+            file_put_contents($pathRequest, $contentRequest);
+            echo "\e[0;31;42mMessage: $requestName create successfully!\e[0m\n";
+        } else {
+            echo "\e[0;34;41mController Error: Controller $requestName exist!\e[0m\n";
+        }
+    }
+
     if ($argv == "make:controller") {
         if (!empty($_SERVER['argv'][2])) {
             $controller = $_SERVER['argv'][2];
@@ -8,6 +37,7 @@ if (!empty($_SERVER['argv'][1])) {
         }
         die();
     }
+
     if ($argv == "make:model") {
         if (!empty($_SERVER['argv'][2])) {
             $model = $_SERVER['argv'][2];
@@ -19,6 +49,7 @@ if (!empty($_SERVER['argv'][1])) {
         }
         die();
     }
+
     if ($argv == "delete:controller") {
         if (!empty($_SERVER['argv'][2])) {
             $controller = $_SERVER['argv'][2];
@@ -31,7 +62,24 @@ if (!empty($_SERVER['argv'][1])) {
 
 function createController($controller  = "")
 {
-    $pathController = "app/controllers/$controller.php";
+    $controllerArr = explode("/", $controller);
+    $controller = end($controllerArr);
+    $namespace = "App\\Controllers";
+    if (count($controllerArr) > 1) {
+        $folder = "";
+        foreach ($controllerArr as $key => $value) {
+            if ($key != count($controllerArr) - 1) {
+                $folder .= "/" . $value;
+                if (!file_exists("app/controllers$folder")) {
+                    mkdir("app/controllers$folder");
+                }
+                $namespace .= "\\" . ucfirst($value);
+            }
+        }
+    }
+    $file = implode("/", $controllerArr);
+    $pathController = "app/controllers/$file.php";
+
     if (!file_exists($pathController)) {
         $pathArtisan = "vendor/core/artisan/Controller.php";
         $contentController = require_once "$pathArtisan";
