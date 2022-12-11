@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Sửa sản phẩm")
-@session("content")
+@section("title","Sửa sản phẩm")
+@section("content")
 @include("components/popper")
 <div class="sm:container my-5">
     <div class="flex justify-end pr-32 ">
@@ -77,9 +77,9 @@
         <button type="submit" id="create" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Thêm sản phẩm</button>
     </form>
 </div>
-@endsession
+@endsection
 
-@session("script")
+@section("script")
 <script>
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -138,4 +138,4 @@
     }
 </script>
 
-@endsession
+@endsection

@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Trang chủ")
-@session("content")
+@section("title","Trang chủ")
+@section("content")
 <?php
 
 use Core\Cookie;
@@ -9,4 +9,4 @@ echo '<pre>';
 var_dump(Cookie::data());
 echo '</pre>';
 ?>
-@endsession
+@endsection

@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Sửa danh mục")
-@session("content")
+@section("title","Sửa danh mục")
+@section("content")
 
 @include("components/popper")
 
@@ -43,7 +43,7 @@
     </div>
 </div>
 
-@endsession
+@endsection
 <script>
     var href = window.location.href;
     if (href.indexOf("admin/menu")) {
@@ -51,4 +51,4 @@
         $("#svgMenu").addClass("text-blue-600");
     }
 </script>
-@endsession
+@endsection

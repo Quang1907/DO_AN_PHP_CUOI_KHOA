@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Hoạt động")
-@session("content")
+@section("title","Hoạt động")
+@section("content")
 <div class="bg-white py-6 sm:py-8 lg:py-12">
     <div class="max-w-screen-2xl px-4 md:px-8 mx-auto">
         <div class="flex justify-between items-center gap-8 mb-4 sm:mb-8 md:mb-12">
@@ -56,4 +56,4 @@
         </div>
     </div>
 </div>
-@endsession
+@endsection

@@ -44,7 +44,6 @@ class Database extends Connection
         foreach ($checkField as $key => $value) {
             $fieldArr["field"][$key] = $value["Field"];
         }
-        
         if (!empty($data)) {
             $updateStr = "";
             foreach ($data as $key => $value) {
@@ -52,9 +51,8 @@ class Database extends Connection
                     $updateStr .= " $key = '$value',";
                 }
             }
-            
             $updateStr = trim($updateStr, ",");
-            $sql = "UPDATE $table SET  $updateStr $condition";
+            $sql = "UPDATE $table SET $updateStr $condition";
             $status = $this->query($sql);
             self::$comperator = "";
             $this->resetQuery();

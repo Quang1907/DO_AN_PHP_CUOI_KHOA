@@ -1,7 +1,7 @@
 @extends("layouts/client_layout")
-@session("title","Quản lý Danh mục")
+@section("title","Quản lý Danh mục")
 
-@session("content")
+@section("content")
 @include("components/popper")
 
 @php
@@ -20,8 +20,8 @@ echo "<input id='message' type='hidden' value='" . $message . "'>";
     </div>
 </div>
 
-@endsession
-@session("script") <script>
+@endsection
+@section("script") <script>
     var href = window.location.href;
     if (href.indexOf("admin/category")) {
         $("#category").addClass("border-blue-600 text-blue-600 ");
@@ -111,4 +111,4 @@ echo "<input id='message' type='hidden' value='" . $message . "'>";
 
     }
 </script>
-@endsession
+@endsection

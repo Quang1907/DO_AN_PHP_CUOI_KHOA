@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Trang chủ")
-@session("content")
+@section("title","Trang chủ")
+@section("content")
 @include("components/popper")
 <div class="overflow-x-auto md:container relative shadow-md sm:rounded-lg mb-5 mt-2">
     <div class="mt-4 flex justify-center">
@@ -94,8 +94,8 @@
         </div>
     </div>
 </div>
-@endsession
-@session("script")
+@endsection
+@section("script")
 <script>
     $("#dropzone-file").change(function(e) {
         var fileName = e.target.files[0].name;
@@ -283,4 +283,4 @@
     }
 
 </script>
-@endsession
+@endsection

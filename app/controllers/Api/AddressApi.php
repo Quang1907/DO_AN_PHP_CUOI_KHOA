@@ -38,4 +38,15 @@ class AddressApi
             ->where("admin", "=", 1)->get();
         return !empty($admin) ? response($admin) : response('not found admin', 412);
     }
+
+    public static function render($street, $province, $district, $ward )
+    {  
+        $province = Database::table("province")->select("_name_province")->where("id", $province)->first();
+        $district = Database::table("district")->select("_name_district")->where("id",$district)->first();
+        $ward = Database::table("ward")->where("id",$ward)->first();
+        
+        $address = $street . ", " . $ward['_name_ward'] . ", " . $district["_name_district"] . ", " . $province['_name_province'];
+        
+        return $address;
+    }
 }

@@ -12,8 +12,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $user = null;
         $email = Cookie::data("email");
-        if (!empty(SESSION::data("email"))) {
-            $email = SESSION::data("email");
+        if (!empty(Session::data("email"))) {
+            $email = Session::data("email");
         }
 
         if (!empty($email)) {

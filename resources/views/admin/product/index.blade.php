@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Quản lý sản phẩm")
-@session("content")
+@section("title","Quản lý sản phẩm")
+@section("content")
 @include("components/popper")
 <?php
 
@@ -78,9 +78,9 @@ echo "<input id='message' type='hidden' value='" . $message . "'>";
         </table>
     </div>
 </div>
-@endsession
+@endsection
 
-@session("script")
+@section("script")
 <script>
     var href = window.location.href;
 
@@ -103,4 +103,4 @@ echo "<input id='message' type='hidden' value='" . $message . "'>";
         }
     })
 </script>
-@endsession
+@endsection

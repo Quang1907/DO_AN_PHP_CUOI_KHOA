@@ -188,6 +188,7 @@ class Request
         $sessionKey = Session::isInvalid();
         Session::flash($sessionKey . "_error", $this->errors());
         Session::flash($sessionKey . "_old", $this->getFields());
+        
         $callback = Session::flash("callback");
         if (!$check && !empty($callback)) {
             return Response::redirect($callback);

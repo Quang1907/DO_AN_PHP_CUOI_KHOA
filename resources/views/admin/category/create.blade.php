@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Thêm danh mục")
-@session("content")
+@section("title","Thêm danh mục")
+@section("content")
 
 @include("components/popper")
 
@@ -42,12 +42,12 @@
     </div>
 </div>
 
-@endsession
-@session("script") <script>
+@endsection
+@section("script") <script>
     var href = window.location.href;
     if (href.indexOf("admin/category")) {
         $("#category").addClass("border-blue-600 text-blue-600 ");
         $("#svgCategory").addClass("text-blue-600");
     }
 </script>
-@endsession
+@endsection

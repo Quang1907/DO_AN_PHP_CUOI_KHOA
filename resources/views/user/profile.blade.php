@@ -1,7 +1,10 @@
 @extends("layouts/client_layout")
-@session("title","Trang cá nhân")
-@session("content")
+@section("title","Trang cá nhân")
+@section("content")
 @if(!empty($user))
+<?php
+    echo "<input id='message' type='hidden' value='". Core\Session::flash("message") ."'>";
+?>
 <div class=" dark:bg-gray-900 flex flex-wrap items-center justify-center">
     <div class="w-full bg-white dark:bg-gray-800 shadow-lg transform duration-200 easy-in-out">
         <div class="h-2/4 sm:h-64 overflow-hidden">
@@ -11,11 +14,6 @@
             <span clspanss="block relative h-32 w-32">
                 <img alt="Photo by aldi sigun on Unsplash" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2ZpbGUlMjBwaWN0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60" class="mx-auto object-cover rounded-full h-24 w-24 bg-white p-1" />
             </span>
-        </div>
-        <div class="text-end">
-            <div class="w-5/6">
-                <a href="{{ route('') }}" class="bg-blue-600 rounded text-white text-clip p-2 hover:bg-blue-500">Back</a>
-            </div>
         </div>
         <div class="container max-w-3xl">
             <div class="flex p-4 w-5/6 m-auto mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 " id="divError" role="alert">
@@ -83,11 +81,17 @@
     </div>
 </div>
 @endif
-@endsession
+@endsection
 
-@session("script")
+@section("script")
 <script src="{{ asset('js/address.js') }}"></script>
 <script>
+    if ($("#message").val()) {
+        Toast.fire({
+            icon: 'success',
+            title: $("#message").val()
+        });
+    }
     var check = false;
     $("#divError").toggle();
     $("#editProfile").click(function() {
@@ -141,4 +145,4 @@
 
     }
 </script>
-@endsession
+@endsection

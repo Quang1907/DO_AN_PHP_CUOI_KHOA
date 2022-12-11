@@ -188,7 +188,7 @@ if (!function_exists('create_slug')) {
 }
 
 if (!function_exists("env")) {
-    function env( $env )
+    function env($env)
     {
         return $_ENV[$env];
     }

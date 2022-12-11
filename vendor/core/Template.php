@@ -11,8 +11,9 @@ class Template
         $this->__content = $content;
         $this->extends();
         $this->include();
-        $this->session();
+        $this->section();
         $this->php();
+        $this->remove();
         $this->printEntities();
         $this->printRaw();
         $this->ifCondition();
@@ -24,6 +25,15 @@ class Template
         eval("?>$this->__content<?php");
     }
 
+    public function remove() {
+        $pattern = "~{{--\s*(.+?)\s*--}}~is";
+        preg_match_all($pattern, $this->__content, $matches);
+        if (!empty($matches[1])) {
+            foreach ($matches[1] as $key => $value) {
+                $this->__content = str_replace($matches[0][$key], "" , $this->__content);
+            }
+        }
+    }
 
     public function extends()
     {
@@ -32,7 +42,7 @@ class Template
         if (!empty($matches[1])) {
             foreach ($matches[1] as $key => $view) {
                 $contentView = "";
-                $pathView = _DIR_ROOT . "resources/views/$view.php";
+                $pathView = _DIR_ROOT . "resources/views/$view.blade.php";
                 if (file_exists($pathView)) {
                     $contentView = file_get_contents($pathView);
                 } else {
@@ -51,7 +61,7 @@ class Template
         if (!empty($matches[1])) {
             foreach ($matches[1] as $key => $view) {
                 $contentView = "";
-                $pathView = _DIR_ROOT . "resources/views/$view.php";
+                $pathView = _DIR_ROOT . "resources/views/$view.blade.php";
                 if (file_exists($pathView)) {
                     $contentView = file_get_contents($pathView);
                 } else {
@@ -66,9 +76,9 @@ class Template
         }
     }
 
-    public function session()
+    public function section()
     {
-        $pattern = "~@session\(\"*'*(.+?)\"*'*,\s*\"*'*(.+?)\"*'*\)~";
+        $pattern = "~@section\(\"*'*(.+?)\"*'*,\s*\"*'*(.+?)\"*'*\)~";
         preg_match_all($pattern, $this->__content, $matches);
         if (!empty($matches[1])) {
             foreach ($matches[1] as $key => $value) {
@@ -79,12 +89,12 @@ class Template
             }
         }
 
-        $pattern = "~@session\s*\(\"*'*(.+?)\"*'*\)(.+?)@endsession~is";
+        $pattern = "~@section\s*\(\"*'*(.+?)\"*'*\)(.+?)@endsection~is";
         preg_match_all($pattern, $this->__content, $matches);
         if (!empty($matches[1])) {
-            foreach ($matches[1] as $key => $session) {
+            foreach ($matches[1] as $key => $section) {
                 if (!empty($matches[2][$key])) {
-                    $this->__content = preg_replace("~@yield\(\"*'*($session)\"*'*\)~", $matches[2][$key], $this->__content);
+                    $this->__content = preg_replace("~@yield\(\"*'*($section)\"*'*\)~", $matches[2][$key], $this->__content);
                 }
                 $this->__content = str_replace($matches[0][$key], "", $this->__content);
             }
@@ -99,8 +109,8 @@ class Template
             }
         }
 
-        if (strpos($this->__content, "@session")) {
-            $this->session();
+        if (strpos($this->__content, "@section")) {
+            $this->section();
         }
     }
 
@@ -141,7 +151,7 @@ class Template
         }
     }
 
-    public function  printRaw()
+    public function printRaw()
     {
         $pattern = "~{{\s*(.+?)\s*}}~is";
         preg_match_all($pattern, $this->__content, $matches);

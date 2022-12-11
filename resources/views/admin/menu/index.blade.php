@@ -1,7 +1,7 @@
 @extends("layouts/client_layout")
-@session("title","Quản lý Danh mục")
+@section("title","Quản lý Danh mục")
 
-@session("content")
+@section("content")
 @include("components/popper")
 
 <div class="container">
@@ -32,9 +32,9 @@
     </div>
 </div>
 
-@endsession
+@endsection
 
-@session("script")
+@section("script")
 <script>
         var href = window.location.href;
         if (href.indexOf("admin/menu")) {
@@ -43,4 +43,4 @@
         }
 
 </script>
-@endsession
+@endsection

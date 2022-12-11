@@ -1,6 +1,6 @@
 @extends("layouts/client_layout")
-@session("title","Đăng nhập")
-@session("content")
+@section("title","Đăng nhập")
+@section("content")
 <div class="sm:container">
     <form class="space-y-6 w-1/2 m-auto my-5" action="{{route('login')}}" method="post">
         @csrf
@@ -30,4 +30,4 @@
         </div>
     </form>
 </div>
-@endsession
+@endsection

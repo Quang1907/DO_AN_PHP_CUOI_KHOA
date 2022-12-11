@@ -8,6 +8,7 @@ use App\Controllers\CategoryController;
 use App\Controllers\MenuController;
 use App\Controllers\ProductController;
 use App\Controllers\UserController;
+use App\Models\Product;
 use Core\Database;
 use Core\Route;
 
@@ -20,7 +21,8 @@ Route::get("contact", function () {
 });
 
 Route::get("shop", function () {
-    return view("shop");
+    $products = Product::join("categories as c", "c.id = products.category_id")->get();
+    return view("shop", compact( "products" ));
 });
 
 Route::get("activities", function () {
@@ -34,8 +36,11 @@ Route::get("profile", function () {
 Route::get("change-password", function () {
     return view("user/password");
 });
+
 Route::get("logout", [AuthController::class, "logout"]);
 Route::post("login", [AuthController::class, "login"]);
+Route::post("password", [AuthController::class, "password"]);
+Route::post("address", [AuthController::class, "address"]);
 
 Route::get("change-address", function () {
     $provinces = Database::table("province")->get();
